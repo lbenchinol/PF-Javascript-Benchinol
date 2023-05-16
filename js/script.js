@@ -1,47 +1,78 @@
 /* VARIABLES GLOBALES */
 
-let dolarOficial = 235.98;
-let impuestoPais = 1.30;
-let percepGanancias = 1.45;
-let percepBienes = 1.25;
+const dolarOficial = 241.39;
+const impuestoPais = 1.30;
+const percepGanancias = 1.45;
+const percepBienes = 1.25;
 
+class Producto {
+    constructor(nombre, precioLoc, precioEnvioLoc, precioExt, precioEnvioExt) {
+        this.nombre = nombre.toUpperCase();
+        this.precioLoc = precioLoc;
+        this.precioEnvioLoc = precioEnvioLoc;
+        this.precioExt = precioExt;
+        this.precioEnvioExt = precioEnvioExt;
+    }
+}
 
+const arrayProductos = [];
 
 let nombreUser = prompt("Ingrese su nombre");
-let nombreProducto = prompt("Ingrese el nombre del producto");
 
-let precioLoc = parseInt(prompt("Ingrese el valor en $ARS del mercado local"));
-precioLoc = chequearSiEsValorCorrecto(precioLoc, "$ARS", "mercado local")
+let cantidadProdcutos = parseInt(prompt("¿Cuántos prodcutos va a ingresar?"));
+cantidadProdcutos = chequearCantidadProductos(cantidadProdcutos);
 
-let precioEnvioLoc = parseInt(prompt("Ingrese el valor en $ARS del envío local"));
-precioEnvioLoc = chequearSiEsValorCorrecto(precioEnvioLoc, "$ARS", "envío local")
+for (let i = 0; i < cantidadProdcutos; i++) {
+    let nombreProducto = prompt("Ingrese el nombre del producto");
 
-let precioExt = parseInt(prompt("Ingrese el valor en $USD del mercado exterior"));
-precioExt = chequearSiEsValorCorrecto(precioExt, "$USD", "mercado exterior")
+    let precioLoc = parseInt(prompt("Ingrese el valor en $ARS del mercado local"));
+    precioLoc = chequearSiEsValorCorrecto(precioLoc, "$ARS", "mercado local");
 
-let precioEnvioExt = parseInt(prompt("Ingrese el valor en $USD del envío exterior"));
-precioEnvioExt = chequearSiEsValorCorrecto(precioEnvioExt, "$USD", "envío exterior")
+    let precioEnvioLoc = parseInt(prompt("Ingrese el valor en $ARS del envío local"));
+    precioEnvioLoc = chequearSiEsValorCorrecto(precioEnvioLoc, "$ARS", "envío local");
 
-comparacionPrecios();
+    let precioExt = parseInt(prompt("Ingrese el valor en $USD del mercado exterior"));
+    precioExt = chequearSiEsValorCorrecto(precioExt, "$USD", "mercado exterior");
 
+    let precioEnvioExt = parseInt(prompt("Ingrese el valor en $USD del envío exterior"));
+    precioEnvioExt = chequearSiEsValorCorrecto(precioEnvioExt, "$USD", "envío exterior");
 
+    arrayProductos.push(new Producto(nombreProducto, precioLoc, precioEnvioLoc, precioExt, precioEnvioExt));
+}
+
+comparadorPrecios();
 
 /* FUNCIONES */
 
-function chequearSiEsValorCorrecto(precio, moneda, mensaje) {
-    while (isNaN(precio) || precio <= 0) {
-        precio = parseInt(prompt(`Error! Ingrese correctamente el valor en ${moneda} del ${mensaje}`));
+function chequearCantidadProductos(cantidad) {
+    while (cantidad < 1) {
+        cantidad = parseInt(prompt("Error! Ingrese correctamente la cantidad de productos a ingresar"));
     }
-    return precio;
+    return cantidad;
 }
 
-function comparacionPrecios() {
-    let precioFinalLoc = precioLoc + precioEnvioLoc;
-    let precioFinalExt;
-    if ((precioExt + precioEnvioExt) < 300) {
-        precioFinalExt = ((precioExt + precioEnvioExt) * impuestoPais * percepGanancias).toFixed(2);
+function chequearSiEsValorCorrecto(precio, moneda, mensaje) {
+    if (mensaje == "envío local" || mensaje == "envío exterior") {
+        while (isNaN(precio) || precio < 0) {
+            precio = parseInt(prompt(`Error! Ingrese correctamente el valor en ${moneda} del ${mensaje}`));
+        }
+        return precio;
     } else {
-        precioFinalExt = ((precioExt + precioEnvioExt) * impuestoPais * percepGanancias * percepBienes).toFixed(2);
+        while (isNaN(precio) || precio <= 0) {
+            precio = parseInt(prompt(`Error! Ingrese correctamente el valor en ${moneda} del ${mensaje}`));
+        }
+        return precio;
+    }
+}
+
+function comparadorPrecios() {
+    let precioFinalLoc = arrayProductos.reduce((total, e) => total + e.precioLoc + e.precioEnvioLoc, 0);
+    let precioFinalExt = arrayProductos.reduce((total, e) => total + e.precioExt + e.precioEnvioExt, 0);
+
+    if (precioFinalExt < 300) {
+        precioFinalExt = (precioFinalExt * dolarOficial * impuestoPais * percepGanancias).toFixed(2);
+    } else {
+        precioFinalExt = (precioFinalExt * dolarOficial * impuestoPais * percepGanancias * percepBienes).toFixed(2);
     }
 
     if (precioFinalLoc > precioFinalExt) {
@@ -54,9 +85,10 @@ function comparacionPrecios() {
 }
 
 function decisionFinal(mercado, precioFinal) {
+    const productos = arrayProductos.reduce((prod, e) => prod + e.nombre + " ", "");
     if (mercado == "local" || mercado == "exterior") {
-        alert(`${nombreUser}, te conviene comprar tu ${nombreProducto} en el mercado ${mercado} con un precio total de $${precioFinal} ARS`);
+        alert(`${nombreUser}, te conviene comprar tus ${productos} en el mercado ${mercado} con un precio total de $${precioFinal} ARS`);
     } else if (mercado == "igual") {
-        alert(`${nombreUser}, tu ${nombreProducto} en el mercado local y exterior cuesta $${precioFinal} ARS. Decidí vos dónde comprarlo!`);
+        alert(`${nombreUser}, tus productos en el mercado local y exterior cuestan $${precioFinal} ARS. Decidí vos dónde comprarlos!`);
     }
 }
