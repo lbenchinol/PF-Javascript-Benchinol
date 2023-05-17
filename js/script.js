@@ -40,7 +40,16 @@ for (let i = 0; i < cantidadProdcutos; i++) {
     arrayProductos.push(new Producto(nombreProducto, precioLoc, precioEnvioLoc, precioExt, precioEnvioExt));
 }
 
-comparadorPrecios();
+const decisionFinal = (mercado, precioFinal) => {
+    const productos = arrayProductos.reduce((prod, e) => prod + e.nombre + " ", "");
+    if (mercado == "local" || mercado == "exterior") {
+        alert(`${nombreUser}, te conviene comprar tus ${productos} en el mercado ${mercado} con un precio total de $${precioFinal} ARS`);
+    } else if (mercado == "igual") {
+        alert(`${nombreUser}, tus productos en el mercado local y exterior cuestan $${precioFinal} ARS. Decidí vos dónde comprarlos!`);
+    }
+}
+
+comparadorPrecios(decisionFinal);
 
 /* FUNCIONES */
 
@@ -65,7 +74,7 @@ function chequearSiEsValorCorrecto(precio, moneda, mensaje) {
     }
 }
 
-function comparadorPrecios() {
+function comparadorPrecios(decisionFinal) {
     let precioFinalLoc = arrayProductos.reduce((total, e) => total + e.precioLoc + e.precioEnvioLoc, 0);
     let precioFinalExt = arrayProductos.reduce((total, e) => total + e.precioExt + e.precioEnvioExt, 0);
 
@@ -81,14 +90,5 @@ function comparadorPrecios() {
         decisionFinal("local", precioFinalLoc);
     } else {
         decisionFinal("igual", precioFinalLoc);
-    }
-}
-
-function decisionFinal(mercado, precioFinal) {
-    const productos = arrayProductos.reduce((prod, e) => prod + e.nombre + " ", "");
-    if (mercado == "local" || mercado == "exterior") {
-        alert(`${nombreUser}, te conviene comprar tus ${productos} en el mercado ${mercado} con un precio total de $${precioFinal} ARS`);
-    } else if (mercado == "igual") {
-        alert(`${nombreUser}, tus productos en el mercado local y exterior cuestan $${precioFinal} ARS. Decidí vos dónde comprarlos!`);
     }
 }
