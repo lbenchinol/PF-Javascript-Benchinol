@@ -6,40 +6,46 @@ const percepGanancias = 1.45;
 const percepBienes = 1.25;
 
 class Producto {
-    constructor(nombre, precioLoc, precioEnvioLoc, precioExt, precioEnvioExt) {
+    constructor(nombre, precioLoc, linkLoc, precioExt, linkExt) {
         this.nombre = nombre.toUpperCase();
         this.precioLoc = precioLoc;
-        this.precioEnvioLoc = precioEnvioLoc;
+        this.linkLoc = linkLoc;
         this.precioExt = precioExt;
-        this.precioEnvioExt = precioEnvioExt;
+        this.linkExt = linkExt;
     }
 }
 
 const arrayProductos = [];
 
+/*
+-----   CREAR NUEVO INPUT DE USER NAME  -----
 let nombreUser = prompt("Ingrese su nombre");
+*/
 
-let cantidadProdcutos = parseInt(prompt("¿Cuántos prodcutos va a ingresar?"));
-cantidadProdcutos = chequearCantidadProductos(cantidadProdcutos);
+/*
+-----   CREAR NUEVOS INPUTS PARA CADA SITUACION     -----
+        PONER EVENT LISTENERS EN CADA SITUACION EN EL FOCUS DE LAS INPUTS (CUANDO SAQUEN EL FOCUS)
+let nombreProducto;
 
-for (let i = 0; i < cantidadProdcutos; i++) {
-    let nombreProducto = prompt("Ingrese el nombre del producto");
+let precioLoc;
+precioLoc = chequearSiEsValorCorrecto(precioLoc, "producto");
 
-    let precioLoc = parseInt(prompt("Ingrese el valor en $ARS del mercado local"));
-    precioLoc = chequearSiEsValorCorrecto(precioLoc, "$ARS", "mercado local");
+let linkLoc = parseInt(prompt("Ingrese el valor en $ARS del envío local"));
 
-    let precioEnvioLoc = parseInt(prompt("Ingrese el valor en $ARS del envío local"));
-    precioEnvioLoc = chequearSiEsValorCorrecto(precioEnvioLoc, "$ARS", "envío local");
+let precioExt;
+precioExt = chequearSiEsValorCorrecto(precioExt, "producto");
 
-    let precioExt = parseInt(prompt("Ingrese el valor en $USD del mercado exterior"));
-    precioExt = chequearSiEsValorCorrecto(precioExt, "$USD", "mercado exterior");
+let linkExt;
 
-    let precioEnvioExt = parseInt(prompt("Ingrese el valor en $USD del envío exterior"));
-    precioEnvioExt = chequearSiEsValorCorrecto(precioEnvioExt, "$USD", "envío exterior");
+*/
 
-    arrayProductos.push(new Producto(nombreProducto, precioLoc, precioEnvioLoc, precioExt, precioEnvioExt));
-}
+/*
+-----   ANTES DEL PUSH, AGREGAR TAMBIEN EN EL DOM   -----
+arrayProductos.push(new Producto(nombreProducto, precioLoc, linkLoc, precioExt, linkExt));
+*/
 
+/*
+-----   ARREGLAR LOS AVISOS DE ALERT A MSJ EN DOM   -----
 const decisionFinal = (mercado, precioFinal) => {
     const productos = arrayProductos.reduce((prod, e) => prod + e.nombre + " ", "");
     if (mercado == "local" || mercado == "exterior") {
@@ -48,35 +54,37 @@ const decisionFinal = (mercado, precioFinal) => {
         alert(`${nombreUser}, tus productos en el mercado local y exterior cuestan $${precioFinal} ARS. Decidí vos dónde comprarlos!`);
     }
 }
+*/
 
+/*
+-----   AGREGAR FUNCION A EVENT LISTENER DE BOTON "CALCULAR" Y TOMAR LOS VALORES DE ENVIOS LOC Y EXT    -----
 comparadorPrecios(decisionFinal);
+*/
 
 /* FUNCIONES */
 
-function chequearCantidadProductos(cantidad) {
-    while (cantidad < 1) {
-        cantidad = parseInt(prompt("Error! Ingrese correctamente la cantidad de productos a ingresar"));
-    }
-    return cantidad;
-}
+/*
+-----   SACAR LOS PROMTS POR AVISOS EN EL DOM - NO DEVOLVER NADA
+function chequearSiEsValorCorrecto(chequear, tipo) {
+    if (tipo == "producto" || tipo == "envio") {
+        while (isNaN(chequear) || chequear < 0) {
+            
+        }
 
-function chequearSiEsValorCorrecto(precio, moneda, mensaje) {
-    if (mensaje == "envío local" || mensaje == "envío exterior") {
-        while (isNaN(precio) || precio < 0) {
-            precio = parseInt(prompt(`Error! Ingrese correctamente el valor en ${moneda} del ${mensaje}`));
+    } else if(tipo == "link") {
+        // Hacer check segun propiedades de LINK (www, .com, etc)
+        while (isNaN(chequear) || chequear <= 0) {
+
         }
-        return precio;
-    } else {
-        while (isNaN(precio) || precio <= 0) {
-            precio = parseInt(prompt(`Error! Ingrese correctamente el valor en ${moneda} del ${mensaje}`));
-        }
-        return precio;
     }
 }
+*/
 
 function comparadorPrecios(decisionFinal) {
-    let precioFinalLoc = arrayProductos.reduce((total, e) => total + e.precioLoc + e.precioEnvioLoc, 0);
-    let precioFinalExt = arrayProductos.reduce((total, e) => total + e.precioExt + e.precioEnvioExt, 0);
+    let precioFinalLoc = arrayProductos.reduce((total, e) => total + e.precioLoc, 0);
+    // SUMAR A precioFinalLoc EL ENVIO LOCAL
+    let precioFinalExt = arrayProductos.reduce((total, e) => total + e.precioExt, 0);
+    // SUMAR A precioFinalExt EL ENVIO EXTERIOR
 
     if (precioFinalExt < 300) {
         precioFinalExt = (precioFinalExt * dolarOficial * impuestoPais * percepGanancias).toFixed(2);
