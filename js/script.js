@@ -1,10 +1,10 @@
 /*
 BASE ESTILOS BS PARA AGREGAR PRODUCTOS
-    <div div class="row mb-1" >
+    <div class="row mb-1" >
         <p class="col m-0">NOMBRE PRODUCTO</p>
         <p class="col m-0 border-start border-end">PRECIO ARS</p>
         <p class="col m-0">PRECIO USD</p>
-    </div >
+    </div>
 /*
 
 /*
@@ -21,6 +21,7 @@ const impuestoPais = 1.30;
 const percepGanancias = 1.45;
 const percepBienes = 1.25;
 
+//			CONSTRUCTOR DE CADA PRODUCTO
 class Producto {
     constructor(nombre, precioLoc, linkLoc, precioExt, linkExt) {
         this.nombre = nombre.toUpperCase();
@@ -31,7 +32,45 @@ class Producto {
     }
 }
 
-const arrayProductos = [];
+//			VARIABLE GLOBAL PARA DOM
+const listaHTML = document.getElementById("lista");
+
+//			ARRAY DE PRODUCTOS
+const listaProductos = [];
+
+//			ACTUALIZA LISTA DE PRODUCTOS
+const actualizarLista = ()=>{
+	listaHTML.innerHTML = "";
+	listaProductos.forEach((producto)=>{
+		const contenedor = document.createElement("div");
+		contenedor.classList("row mb-1");
+		
+		const nombre = document.createElement("p");
+		nombre.classList("col m-0");
+		nombre.innerText = producto.nombre;
+		
+		const precioARS =  document.createElement("p");
+		precioARS.classList("col m-0 border-start border-end");
+		precioARS.innerText = producto.precioLoc;
+		
+		const precioUSD = document.createElement("p");
+		precioUSD.classList("col m-0");
+		precioUSD.innerText = producto.precioExt;
+		
+		const boton = document.createElement("button");
+		boton.textContent = "Eliminar";
+		boton.addEventListener("click", ()=>{
+			eliminarDeLaLista(producto);
+		});
+		
+		contenedor.appendChild(nombre);
+		contenedor.appendChild(precioARS);
+		contenedor.appendChild(precioUSD);
+		contenedor.appendChild(boton);
+		
+		listaHTML.appendChild(contendor);
+	});
+}
 
 /*
 -----   CREAR NUEVOS INPUTS PARA CADA SITUACION     -----
@@ -52,13 +91,13 @@ let linkExt;
 
 /*
 -----   ANTES DEL PUSH, AGREGAR TAMBIEN EN EL DOM   -----
-arrayProductos.push(new Producto(nombreProducto, precioLoc, linkLoc, precioExt, linkExt));
+listaProductos.push(new Producto(nombreProducto, precioLoc, linkLoc, precioExt, linkExt));
 */
 
 /*
 -----   ARREGLAR LOS AVISOS DE ALERT A MSJ EN DOM   -----
 const decisionFinal = (mercado, precioFinal) => {
-    const productos = arrayProductos.reduce((prod, e) => prod + e.nombre + " ", "");
+    const productos = listaProductos.reduce((prod, e) => prod + e.nombre + " ", "");
     if (mercado == "local" || mercado == "exterior") {
         alert(`${nombreUser}, te conviene comprar tus ${productos} en el mercado ${mercado} con un precio total de $${precioFinal} ARS`);
     } else if (mercado == "igual") {
@@ -91,10 +130,11 @@ function chequearSiEsValorCorrecto(chequear, tipo) {
 }
 */
 
+//			COMPARADOR DE PRECIOS Y ELECCION FINAL
 function comparadorPrecios(decisionFinal) {
-    let precioFinalLoc = arrayProductos.reduce((total, e) => total + e.precioLoc, 0);
+    let precioFinalLoc = listaProductos.reduce((total, e) => total + e.precioLoc, 0);
     // SUMAR A precioFinalLoc EL ENVIO LOCAL
-    let precioFinalExt = arrayProductos.reduce((total, e) => total + e.precioExt, 0);
+    let precioFinalExt = listaProductos.reduce((total, e) => total + e.precioExt, 0);
     // SUMAR A precioFinalExt EL ENVIO EXTERIOR
 
     if (precioFinalExt < 300) {
@@ -111,3 +151,37 @@ function comparadorPrecios(decisionFinal) {
         decisionFinal("igual", precioFinalLoc);
     }
 }
+
+//			FUNCION PARA AGREGAR CADA PRODUCTO
+/*
+nombreProducto
+linkProdLocal
+precioLocal
+linkProdExterior
+precioExterior
+
+precioEnvioLoc
+precioEnvioExt
+
+btnCalcular
+btnLimpiar
+*/
+function agregarProducto(){
+	const nombreProducto = document.getElementById("nombreProducto");
+	
+	
+	const linkProdLocal = document.getElementById("linkProdLocal");
+	const precioLocal = document.getElementById("precioLocal");
+	const linkProdExterior = document.getElementById("linkProdExterior");
+	const precioExterior = document.getElementById("precioExterior");
+}
+
+//			CONFIGURACION DE ELEMENTOS DEL FORMULARIO
+function configFormulario (){
+	const botonAgregar = document.getElementById("btnAgregar");
+	botonAgregar.addEventListener("click", ()=>{
+			agregarProducto();
+		});
+}
+
+configFormulario();
