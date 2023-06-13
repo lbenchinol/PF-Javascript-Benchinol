@@ -1,27 +1,10 @@
-/*
-BASE ESTILOS BS PARA AGREGAR PRODUCTOS
-    <div class="row mb-1" >
-        <p class="col m-0">NOMBRE PRODUCTO</p>
-        <p class="col m-0 border-start border-end">PRECIO ARS</p>
-        <p class="col m-0">PRECIO USD</p>
-    </div>
-/*
-
-/*
-ESTILOS VALIDACION BS EN LAS CLASS DE LOS inputs
-    class="form-label is-valid"
-    class="form-label is-invalid"
-*/
-
-
-/* VARIABLES GLOBALES */
-
-const dolarOficial = 241.39;
+//      VARIABLES GLOBALES
+const dolarOficial = 249.13;
 const impuestoPais = 1.30;
 const percepGanancias = 1.45;
 const percepBienes = 1.25;
 
-//			CONSTRUCTOR DE CADA PRODUCTO
+//		CONSTRUCTOR DE CADA PRODUCTO
 class Producto {
     constructor(nombre, precioLoc, linkLoc, precioExt, linkExt) {
         this.nombre = nombre.toUpperCase();
@@ -32,95 +15,71 @@ class Producto {
     }
 }
 
-//			VARIABLE GLOBAL PARA DOM
+//		VARIABLE GLOBAL PARA DOM
 const listaHTML = document.getElementById("lista");
 
-//			ARRAY DE PRODUCTOS
+//		ARRAY DE PRODUCTOS
 const listaProductos = [];
 
-//			ACTUALIZA LISTA DE PRODUCTOS
-const actualizarLista = ()=>{
-	listaHTML.innerHTML = "";
-	listaProductos.forEach((producto)=>{
-		const contenedor = document.createElement("div");
-		contenedor.classList("row mb-1");
-		
-		const nombre = document.createElement("p");
-		nombre.classList("col m-0");
-		nombre.innerText = producto.nombre;
-		
-		const precioARS =  document.createElement("p");
-		precioARS.classList("col m-0 border-start border-end");
-		precioARS.innerText = producto.precioLoc;
-		
-		const precioUSD = document.createElement("p");
-		precioUSD.classList("col m-0");
-		precioUSD.innerText = producto.precioExt;
-		
-		const boton = document.createElement("button");
-		boton.textContent = "Eliminar";
-		boton.addEventListener("click", ()=>{
-			eliminarDeLaLista(producto);
-		});
-		
-		contenedor.appendChild(nombre);
-		contenedor.appendChild(precioARS);
-		contenedor.appendChild(precioUSD);
-		contenedor.appendChild(boton);
-		
-		listaHTML.appendChild(contendor);
-	});
+//		ACTUALIZA LISTA DE PRODUCTOS
+const actualizarLista = () => {
+    listaHTML.innerHTML = "";
+    listaProductos.forEach((producto) => {
+        const contenedor = document.createElement("div");
+        contenedor.classList.add("row");
+        contenedor.classList.add("mb-1");
+
+        const nombre = document.createElement("p");
+        nombre.classList.add("col");
+        nombre.classList.add("m-0");
+        nombre.innerText = producto.nombre;
+
+        const precioARS = document.createElement("p");
+        precioARS.classList.add("col");
+        precioARS.classList.add("m-0");
+        precioARS.classList.add("border-start");
+        precioARS.classList.add("border-end");
+        precioARS.innerText = producto.precioLoc;
+
+        const precioUSD = document.createElement("p");
+        precioUSD.classList.add("col");
+        precioUSD.classList.add("m-0");
+        precioUSD.innerText = producto.precioExt;
+
+        const boton = document.createElement("button");
+        boton.textContent = "Eliminar";
+        boton.addEventListener("click", () => {
+            eliminarDeLaLista(producto);
+        });
+
+        contenedor.appendChild(nombre);
+        contenedor.appendChild(precioARS);
+        contenedor.appendChild(precioUSD);
+        contenedor.appendChild(boton);
+
+        listaHTML.append(contenedor);
+    });
 }
 
-/*
------   CREAR NUEVOS INPUTS PARA CADA SITUACION     -----
-        PONER EVENT LISTENERS EN CADA SITUACION EN EL FOCUS DE LAS INPUTS (CUANDO SAQUEN EL FOCUS)
-let nombreProducto;
-
-let precioLoc;
-precioLoc = chequearSiEsValorCorrecto(precioLoc, "producto");
-
-let linkLoc = parseInt(prompt("Ingrese el valor en $ARS del envío local"));
-
-let precioExt;
-precioExt = chequearSiEsValorCorrecto(precioExt, "producto");
-
-let linkExt;
-
-*/
-
-/*
------   ANTES DEL PUSH, AGREGAR TAMBIEN EN EL DOM   -----
-listaProductos.push(new Producto(nombreProducto, precioLoc, linkLoc, precioExt, linkExt));
-*/
-
-/*
------   ARREGLAR LOS AVISOS DE ALERT A MSJ EN DOM   -----
+//      FUNCION DECISION FINAL SEGUN EL CALCULO
+//-----   ARREGLAR LOS AVISOS DE ALERT A MSJ EN DOM   -----
 const decisionFinal = (mercado, precioFinal) => {
-    const productos = listaProductos.reduce((prod, e) => prod + e.nombre + " ", "");
     if (mercado == "local" || mercado == "exterior") {
-        alert(`${nombreUser}, te conviene comprar tus ${productos} en el mercado ${mercado} con un precio total de $${precioFinal} ARS`);
+        // AGREGAR TOAST AL MEDIO "CLASE Coder Librerias"
+        //alert(`${nombreUser}, te conviene comprar tus ${productos} en el mercado ${mercado} con un precio total de $${precioFinal} ARS`);
     } else if (mercado == "igual") {
-        alert(`${nombreUser}, tus productos en el mercado local y exterior cuestan $${precioFinal} ARS. Decidí vos dónde comprarlos!`);
+        // AGREGAR TOAST AL MEDIO "CLASE Coder Librerias"
+        //alert(`${nombreUser}, tus productos en el mercado local y exterior cuestan $${precioFinal} ARS. Decidí vos dónde comprarlos!`);
     }
 }
-*/
 
-/*
------   AGREGAR FUNCION A EVENT LISTENER DE BOTON "CALCULAR" Y TOMAR LOS VALORES DE ENVIOS LOC Y EXT    -----
-comparadorPrecios(decisionFinal);
-*/
-
-/* FUNCIONES */
-
-/*
------   SACAR LOS PROMTS POR AVISOS EN EL DOM - NO DEVOLVER NADA
+//      FUNCION CHEQUEADOR DE VALORES
+//-----   SACAR LOS PROMTS POR AVISOS EN EL DOM - NO DEVOLVER NADA
 function chequearSiEsValorCorrecto(chequear, tipo) {
     if (tipo == "producto" || tipo == "envio") {
         while (isNaN(chequear) || chequear < 0) {
             
         }
-
     } else if(tipo == "link") {
         // Hacer check segun propiedades de LINK (www, .com, etc)
         while (isNaN(chequear) || chequear <= 0) {
@@ -128,14 +87,13 @@ function chequearSiEsValorCorrecto(chequear, tipo) {
         }
     }
 }
-*/
 
-//			COMPARADOR DE PRECIOS Y ELECCION FINAL
+//		COMPARADOR DE PRECIOS Y ELECCION FINAL
 function comparadorPrecios(decisionFinal) {
     let precioFinalLoc = listaProductos.reduce((total, e) => total + e.precioLoc, 0);
-    // SUMAR A precioFinalLoc EL ENVIO LOCAL
+    precioFinalLoc += document.getElementById("precioEnvioLoc").value;
     let precioFinalExt = listaProductos.reduce((total, e) => total + e.precioExt, 0);
-    // SUMAR A precioFinalExt EL ENVIO EXTERIOR
+    precioFinalExt += document.getElementById("precioEnvioExt").value;
 
     if (precioFinalExt < 300) {
         precioFinalExt = (precioFinalExt * dolarOficial * impuestoPais * percepGanancias).toFixed(2);
@@ -152,36 +110,77 @@ function comparadorPrecios(decisionFinal) {
     }
 }
 
-//			FUNCION PARA AGREGAR CADA PRODUCTO
-/*
-nombreProducto
-linkProdLocal
-precioLocal
-linkProdExterior
-precioExterior
-
-precioEnvioLoc
-precioEnvioExt
-
-btnCalcular
-btnLimpiar
-*/
-function agregarProducto(){
-	const nombreProducto = document.getElementById("nombreProducto");
-	
-	
-	const linkProdLocal = document.getElementById("linkProdLocal");
-	const precioLocal = document.getElementById("precioLocal");
-	const linkProdExterior = document.getElementById("linkProdExterior");
-	const precioExterior = document.getElementById("precioExterior");
+//      FUNCION PARA LIMPIAR TODO EL FORM LUEGO DE AGREGAR
+const limpiarForm = () => {
+    document.getElementById("nombreProducto").value = "";
+    document.getElementById("linkProdLocal").value = "";
+    document.getElementById("precioLocal").value = "";
+    document.getElementById("linkProdExterior").value = "";
+    document.getElementById("precioExterior").value = "";
 }
 
-//			CONFIGURACION DE ELEMENTOS DEL FORMULARIO
-function configFormulario (){
-	const botonAgregar = document.getElementById("btnAgregar");
-	botonAgregar.addEventListener("click", ()=>{
-			agregarProducto();
-		});
+const borrarTodo = () => {
+    listaProductos = [];
+    // BORRAR LOCAL STORAGE
+    actualizarLista();
+}
+
+//	    FUNCION PARA AGREGAR CADA PRODUCTO
+function agregarProducto() {
+    const nombreProducto = document.getElementById("nombreProducto").value;
+    // CHECKEADOR IF nombreProducto == "" => mostrar error y break;
+    const linkProdLocal = document.getElementById("linkProdLocal").value;
+    const precioLocal = document.getElementById("precioLocal").value;
+    const linkProdExterior = document.getElementById("linkProdExterior").value;
+    const precioExterior = document.getElementById("precioExterior").value;
+
+    listaProductos.push(new Producto(nombreProducto, precioLocal, linkProdLocal, precioExterior, linkProdExterior));
+
+    actualizarLista();
+    limpiarForm();
+}
+
+//      FUNCION ELIMINA PRODUCTO DE LA LISTA
+function eliminarDeLaLista(producto) {
+    const index = listaProductos.indexOf(producto);
+    listaProductos.splice(index, 1);
+    actualizarLista();
+}
+
+//		CONFIGURACION DE ELEMENTOS DEL FORMULARIO
+function configFormulario() {
+    // CONFIG PREVENT DEFAULT DEL FORM
+    const formulario = document.getElementById("formularioProducto");
+    formulario.addEventListener("submit", (e) => {
+        e.preventDefault();
+    })
+
+    // CONFIG BOTON "AGREGAR"
+    const botonAgregar = document.getElementById("btnAgregar");
+    botonAgregar.addEventListener("click", () => {
+        agregarProducto();
+    });
+
+    // CONFIG BOTON "CALCULAR"
+    const botonCalcular = document.getElementById("btnCalcular");
+    botonCalcular.addEventListener("click", () => {
+        // --- FALTA AGREGAR CHEQUEADOR POR CADA INPUT DE ENVIOS
+        comparadorPrecios(decisionFinal);
+    });
+
+    // CONFIG BOTON "LIMPIAR"
+    const botonLimpiar = document.getElementById("btnLimpiar");
+    botonLimpiar.addEventListener("click", () => {
+        borrarTodo();
+    });
+
 }
 
 configFormulario();
+
+
+/*
+ESTILOS VALIDACION BS EN LAS CLASS DE LOS inputs
+    class="form-label is-valid"
+    class="form-label is-invalid"
+*/
