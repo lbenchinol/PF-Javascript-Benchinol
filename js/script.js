@@ -1,3 +1,19 @@
+/*
+BASE ESTILOS BS PARA AGREGAR PRODUCTOS
+    <div div class="row mb-1" >
+        <p class="col m-0">NOMBRE PRODUCTO</p>
+        <p class="col m-0 border-start border-end">PRECIO ARS</p>
+        <p class="col m-0">PRECIO USD</p>
+    </div >
+/*
+
+/*
+ESTILOS VALIDACION BS EN LAS CLASS DE LOS inputs
+    class="form-label is-valid"
+    class="form-label is-invalid"
+*/
+
+
 /* VARIABLES GLOBALES */
 
 const dolarOficial = 241.39;
@@ -16,11 +32,6 @@ class Producto {
 }
 
 const arrayProductos = [];
-
-/*
------   CREAR NUEVO INPUT DE USER NAME  -----
-let nombreUser = prompt("Ingrese su nombre");
-*/
 
 /*
 -----   CREAR NUEVOS INPUTS PARA CADA SITUACION     -----
