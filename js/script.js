@@ -62,7 +62,6 @@ const actualizarLista = () => {
 }
 
 //      FUNCION DECISION FINAL SEGUN EL CALCULO
-//-----   ARREGLAR LOS AVISOS DE ALERT A MSJ EN DOM   -----
 const decisionFinal = (mercado, precioFinal) => {
     if (mercado == "local") {
         swal.fire({
@@ -85,21 +84,6 @@ const decisionFinal = (mercado, precioFinal) => {
             icon: 'success', 
             timer: 5000,
             })
-    }
-}
-
-//      FUNCION CHEQUEADOR DE VALORES
-//-----   SACAR LOS PROMTS POR AVISOS EN EL DOM - NO DEVOLVER NADA
-function chequearSiEsValorCorrecto(chequear, tipo) {
-    if (tipo == "producto" || tipo == "envio") {
-        while (isNaN(chequear) || chequear < 0) {
-            
-        }
-    } else if(tipo == "link") {
-        // Hacer check segun propiedades de LINK (www, .com, etc)
-        while (isNaN(chequear) || chequear <= 0) {
-
-        }
     }
 }
 
@@ -136,14 +120,12 @@ const limpiarForm = () => {
 
 const borrarTodo = () => {
     listaProductos = [];
-    // BORRAR LOCAL STORAGE
     actualizarLista();
 }
 
 //	    FUNCION PARA AGREGAR CADA PRODUCTO
 function agregarProducto() {
     const nombreProducto = document.getElementById("nombreProducto").value;
-    // CHECKEADOR IF nombreProducto == "" => mostrar error y break;
     const linkProdLocal = document.getElementById("linkProdLocal").value;
     const precioLocal = document.getElementById("precioLocal").value;
     const linkProdExterior = document.getElementById("linkProdExterior").value;
@@ -164,6 +146,7 @@ function eliminarDeLaLista(producto) {
 
 //		CONFIGURACION DE ELEMENTOS DEL FORMULARIO
 function configFormulario() {
+
     // CONFIG PREVENT DEFAULT DEL FORM
     const formulario = document.getElementById("formularioProducto");
     formulario.addEventListener("submit", (e) => {
@@ -196,10 +179,3 @@ function configFormulario() {
 }
 
 configFormulario();
-
-
-/*
-ESTILOS VALIDACION BS EN LAS CLASS DE LOS inputs
-    class="form-label is-valid"
-    class="form-label is-invalid"
-*/
