@@ -64,12 +64,27 @@ const actualizarLista = () => {
 //      FUNCION DECISION FINAL SEGUN EL CALCULO
 //-----   ARREGLAR LOS AVISOS DE ALERT A MSJ EN DOM   -----
 const decisionFinal = (mercado, precioFinal) => {
-    if (mercado == "local" || mercado == "exterior") {
-        // AGREGAR TOAST AL MEDIO "CLASE Coder Librerias"
-        //alert(`${nombreUser}, te conviene comprar tus ${productos} en el mercado ${mercado} con un precio total de $${precioFinal} ARS`);
+    if (mercado == "local") {
+        swal.fire({
+            title: `Cálculo terminado!`,
+            text: `Te conviene comprar tus productos en el mercado local con un total de $${precioFinal} ARS`,
+            icon: 'success', 
+            timer: 5000,
+            })
+    } else if (mercado == "exterior") {
+        swal.fire({
+            title: `Cálculo terminado!`,
+            text: `Te conviene comprar tus productos en el mercado exterior con un total de $${precioFinal} ARS`,
+            icon: 'success', 
+            timer: 5000,
+            })
     } else if (mercado == "igual") {
-        // AGREGAR TOAST AL MEDIO "CLASE Coder Librerias"
-        //alert(`${nombreUser}, tus productos en el mercado local y exterior cuestan $${precioFinal} ARS. Decidí vos dónde comprarlos!`);
+        swal.fire({
+            title: `Cálculo terminado!`,
+            text: `Tus productos en el mercado local y exterior cuestan $${precioFinal} ARS. Decidí vos dónde comprarlos!`,
+            icon: 'success', 
+            timer: 5000,
+            })
     }
 }
 
@@ -90,10 +105,10 @@ function chequearSiEsValorCorrecto(chequear, tipo) {
 
 //		COMPARADOR DE PRECIOS Y ELECCION FINAL
 function comparadorPrecios(decisionFinal) {
-    let precioFinalLoc = listaProductos.reduce((total, e) => total + e.precioLoc, 0);
-    precioFinalLoc += document.getElementById("precioEnvioLoc").value;
-    let precioFinalExt = listaProductos.reduce((total, e) => total + e.precioExt, 0);
-    precioFinalExt += document.getElementById("precioEnvioExt").value;
+    let precioFinalLoc = listaProductos.reduce((total, e) => total + parseInt(e.precioLoc), 0);
+    precioFinalLoc += parseInt(document.getElementById("precioEnvioLoc").value);
+    let precioFinalExt = listaProductos.reduce((total, e) => total + parseInt(e.precioExt), 0);
+    precioFinalExt += parseInt(document.getElementById("precioEnvioExt").value);
 
     if (precioFinalExt < 300) {
         precioFinalExt = (precioFinalExt * dolarOficial * impuestoPais * percepGanancias).toFixed(2);
@@ -152,6 +167,10 @@ function configFormulario() {
     // CONFIG PREVENT DEFAULT DEL FORM
     const formulario = document.getElementById("formularioProducto");
     formulario.addEventListener("submit", (e) => {
+        e.preventDefault();
+    })
+    const formularioEnvios = document.getElementById("formularioEnvios");
+    formularioEnvios.addEventListener("submit", (e) => {
         e.preventDefault();
     })
 
