@@ -62,29 +62,28 @@ const actualizarLista = () => {
 }
 
 //      FUNCION DECISION FINAL SEGUN EL CALCULO
-//-----   ARREGLAR LOS AVISOS DE ALERT A MSJ EN DOM   -----
 const decisionFinal = (mercado, precioFinal) => {
     if (mercado == "local") {
         swal.fire({
             title: `Cálculo terminado!`,
             text: `Te conviene comprar tus productos en el mercado local con un total de $${precioFinal} ARS`,
-            icon: 'success', 
+            icon: 'success',
             timer: 5000,
-            })
+        })
     } else if (mercado == "exterior") {
         swal.fire({
             title: `Cálculo terminado!`,
             text: `Te conviene comprar tus productos en el mercado exterior con un total de $${precioFinal} ARS`,
-            icon: 'success', 
+            icon: 'success',
             timer: 5000,
-            })
+        })
     } else if (mercado == "igual") {
         swal.fire({
             title: `Cálculo terminado!`,
             text: `Tus productos en el mercado local y exterior cuestan $${precioFinal} ARS. Decidí vos dónde comprarlos!`,
-            icon: 'success', 
+            icon: 'success',
             timer: 5000,
-            })
+        })
     }
 }
 
@@ -93,9 +92,9 @@ const decisionFinal = (mercado, precioFinal) => {
 function chequearSiEsValorCorrecto(chequear, tipo) {
     if (tipo == "producto" || tipo == "envio") {
         while (isNaN(chequear) || chequear < 0) {
-            
+
         }
-    } else if(tipo == "link") {
+    } else if (tipo == "link") {
         // Hacer check segun propiedades de LINK (www, .com, etc)
         while (isNaN(chequear) || chequear <= 0) {
 
@@ -136,7 +135,7 @@ const limpiarForm = () => {
 
 const borrarTodo = () => {
     listaProductos = [];
-    // BORRAR LOCAL STORAGE
+    localStorage.clear();
     actualizarLista();
 }
 
@@ -150,8 +149,10 @@ function agregarProducto() {
     const precioExterior = document.getElementById("precioExterior").value;
 
     listaProductos.push(new Producto(nombreProducto, precioLocal, linkProdLocal, precioExterior, linkProdExterior));
-
+    localStorage.clear();
+    localStorage.setItem("listaProductos", JSON.stringify(listaProductos));
     actualizarLista();
+
     limpiarForm();
 }
 
@@ -159,11 +160,17 @@ function agregarProducto() {
 function eliminarDeLaLista(producto) {
     const index = listaProductos.indexOf(producto);
     listaProductos.splice(index, 1);
+    localStorage.clear();
+    localStorage.setItem("listaProductos", JSON.stringify(listaProductos));
     actualizarLista();
 }
 
 //		CONFIGURACION DE ELEMENTOS DEL FORMULARIO
 function configFormulario() {
+    // CHEQUEA ALMACENAMIENTO EN LOCAL STORAGE
+    listaProductos = JSON.parse(localStorage.getItem("listaProductos"));
+    actualizarLista();
+
     // CONFIG PREVENT DEFAULT DEL FORM
     const formulario = document.getElementById("formularioProducto");
     formulario.addEventListener("submit", (e) => {
@@ -192,7 +199,6 @@ function configFormulario() {
     botonLimpiar.addEventListener("click", () => {
         borrarTodo();
     });
-
 }
 
 configFormulario();
