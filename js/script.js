@@ -87,21 +87,6 @@ const decisionFinal = (mercado, precioFinal) => {
     }
 }
 
-//      FUNCION CHEQUEADOR DE VALORES
-//-----   SACAR LOS PROMTS POR AVISOS EN EL DOM - NO DEVOLVER NADA
-function chequearSiEsValorCorrecto(chequear, tipo) {
-    if (tipo == "producto" || tipo == "envio") {
-        while (isNaN(chequear) || chequear < 0) {
-            
-        }
-    } else if(tipo == "link") {
-        // Hacer check segun propiedades de LINK (www, .com, etc)
-        while (isNaN(chequear) || chequear <= 0) {
-
-        }
-    }
-}
-
 //		COMPARADOR DE PRECIOS Y ELECCION FINAL
 function comparadorPrecios(decisionFinal) {
     let precioFinalLoc = listaProductos.reduce((total, e) => total + parseInt(e.precioLoc), 0);
