@@ -87,19 +87,44 @@ const decisionFinal = (mercado, precioFinal) => {
     }
 }
 
-//      FUNCION CHEQUEADOR DE VALORES
-//-----   SACAR LOS PROMTS POR AVISOS EN EL DOM - NO DEVOLVER NADA
-function chequearSiEsValorCorrecto(chequear, tipo) {
-    if (tipo == "producto" || tipo == "envio") {
-        while (isNaN(chequear) || chequear < 0) {
+//      FUNCION CHEQUEADOR URL
+function validarURL(link) {
+    try {
+        const newUrl = new URL(link);
+        return newUrl.protocol === 'http:' || newUrl.protocol === 'https:';
+    } catch (err) {
+        return false;
+    }
+}
 
+//      FUNCION CHEQUEADOR DE VALORES
+function checkValores(valor, tipo) {
+    if (tipo == "nombre") {
+        if (isNaN(valor)) {
+            // class="form-label is-valid"
+            // return "valid";
+        } else {
+            // class="form-label is-invalid"
+            // return "invalid";
         }
     } else if (tipo == "link") {
-        // Hacer check segun propiedades de LINK (www, .com, etc)
-        while (isNaN(chequear) || chequear <= 0) {
-
+        if (isNaN(valor) && validarURL(valor)) {
+            // class="form-label is-valid"
+            // return "valid";
+        } else {
+            // class="form-label is-invalid"
+            // return "invalid";
+        }
+    } else if (tipo == "precio") {
+        if (!isNaN(valor) && valor >= 0) {
+            // class="form-label is-valid"
+            // return "valid";
+        } else {
+            // class="form-label is-invalid"
+            // return "invalid";
         }
     }
+
 }
 
 //		COMPARADOR DE PRECIOS Y ELECCION FINAL
@@ -133,6 +158,7 @@ const limpiarForm = () => {
     document.getElementById("precioExterior").value = "";
 }
 
+//      FUNCION PARA BORRAR COMPLETAMENTE TODO
 const borrarTodo = () => {
     listaProductos = [];
     localStorage.clear();
@@ -142,18 +168,34 @@ const borrarTodo = () => {
 //	    FUNCION PARA AGREGAR CADA PRODUCTO
 function agregarProducto() {
     const nombreProducto = document.getElementById("nombreProducto").value;
-    // CHECKEADOR IF nombreProducto == "" => mostrar error y break;
+    const checkNombre = checkValores(nombreProducto, "nombre");
     const linkProdLocal = document.getElementById("linkProdLocal").value;
+    const checkLinkLoc = checkValores(linkProdLocal, "link");
     const precioLocal = document.getElementById("precioLocal").value;
+    const checkPrecioLoc = checkValores(precioLocal, "precio");
     const linkProdExterior = document.getElementById("linkProdExterior").value;
+    const checkLinkExt = checkValores(linkProdExterior, "link");
     const precioExterior = document.getElementById("precioExterior").value;
+    const checkPrecioExt = checkValores(precioExterior, "precio");
 
-    listaProductos.push(new Producto(nombreProducto, precioLocal, linkProdLocal, precioExterior, linkProdExterior));
-    localStorage.clear();
-    localStorage.setItem("listaProductos", JSON.stringify(listaProductos));
-    actualizarLista();
+    if (checkNombre && checkLinkLoc && checkPrecioLoc && checkLinkExt && checkPrecioExt) {
 
-    limpiarForm();
+        listaProductos.push(new Producto(nombreProducto, precioLocal, linkProdLocal, precioExterior, linkProdExterior));
+
+        localStorage.clear();
+        localStorage.setItem("listaProductos", JSON.stringify(listaProductos));
+        actualizarLista();
+
+        limpiarForm();
+
+    } else {
+        swal.fire({
+            title: `Error!`,
+            text: `Hay uno o más errores en los datos anteriores. El producto no se agregó a la lista.`,
+            icon: 'error',
+            timer: 5000,
+        });
+    }
 }
 
 //      FUNCION ELIMINA PRODUCTO DE LA LISTA
@@ -166,7 +208,8 @@ function eliminarDeLaLista(producto) {
 }
 
 //		CONFIGURACION DE ELEMENTOS DEL FORMULARIO
-function configFormulario() {
+document.addEventListener("DOMContentLoaded", () => {
+
     // CHEQUEA ALMACENAMIENTO EN LOCAL STORAGE
     listaProductos = JSON.parse(localStorage.getItem("listaProductos"));
     actualizarLista();
@@ -175,11 +218,11 @@ function configFormulario() {
     const formulario = document.getElementById("formularioProducto");
     formulario.addEventListener("submit", (e) => {
         e.preventDefault();
-    })
+    });
     const formularioEnvios = document.getElementById("formularioEnvios");
     formularioEnvios.addEventListener("submit", (e) => {
         e.preventDefault();
-    })
+    });
 
     // CONFIG BOTON "AGREGAR"
     const botonAgregar = document.getElementById("btnAgregar");
@@ -199,13 +242,5 @@ function configFormulario() {
     botonLimpiar.addEventListener("click", () => {
         borrarTodo();
     });
-}
 
-configFormulario();
-
-
-/*
-ESTILOS VALIDACION BS EN LAS CLASS DE LOS inputs
-    class="form-label is-valid"
-    class="form-label is-invalid"
-*/
+});
