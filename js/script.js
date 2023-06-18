@@ -15,14 +15,12 @@ class Producto {
     }
 }
 
-//		VARIABLE GLOBAL PARA DOM
-const listaHTML = document.getElementById("lista");
-
 //		ARRAY DE PRODUCTOS
 const listaProductos = [];
 
 //		ACTUALIZA LISTA DE PRODUCTOS
 const actualizarLista = () => {
+    const listaHTML = document.getElementById("lista");
     listaHTML.innerHTML = "";
     listaProductos.forEach((producto) => {
         const contenedor = document.createElement("div");
@@ -87,6 +85,60 @@ const decisionFinal = (mercado, precioFinal) => {
     }
 }
 
+//      FUNCION CHEQUEADOR URL
+function validarURL(link) {
+    try {
+        const newUrl = new URL(link);
+        return newUrl.protocol === 'http:' || newUrl.protocol === 'https:';
+    } catch (err) {
+        return false;
+    }
+}
+
+//      FUNCION CHEQUEADOR DE VALORES
+function checkValores(valor, tipo, region) {
+    if (tipo == "nombre") {
+        const nombreProducto = document.getElementById("nombreProducto");
+        nombreProducto.classList.add("form-label");
+
+        if (isNaN(valor)) {
+            nombreProducto.classList.add("is-valid");
+            return true;
+        } else {
+            nombreProducto.classList.add("is-invalid");
+            return false;
+        }
+
+    } else if (tipo == "link") {
+        const linkProd = document.getElementById(`linkProd${region}`);
+        linkProd.classList.add("form-label");
+
+        if (isNaN(valor) && validarURL(valor)) {
+            linkProd.classList.add("is-valid");
+            return true;
+        } else {
+            linkProd.classList.add("is-invalid");
+            return false;
+        }
+
+    } else if (tipo == "precio") {
+        const precioProd = document.getElementById(`precio${region}`);
+        precioProd.classList.add("form-label");
+        const spanPrecioProd = document.getElementById(`spanPrecio${region}`);
+        spanPrecioProd.classList.add("form-label");
+
+        if (!isNaN(valor) && valor >= 0) {
+            precioProd.classList.add("is-valid");
+            spanPrecioProd.classList.add("is-valid");
+            return true;
+        } else {
+            precioProd.classList.add("is-invalid");
+            spanPrecioProd.classList.add("is-invalid");
+            return false;
+        }
+    }
+}
+
 //		COMPARADOR DE PRECIOS Y ELECCION FINAL
 function comparadorPrecios(decisionFinal) {
     let precioFinalLoc = listaProductos.reduce((total, e) => total + parseInt(e.precioLoc), 0);
@@ -111,13 +163,36 @@ function comparadorPrecios(decisionFinal) {
 
 //      FUNCION PARA LIMPIAR TODO EL FORM LUEGO DE AGREGAR
 const limpiarForm = () => {
-    document.getElementById("nombreProducto").value = "";
-    document.getElementById("linkProdLocal").value = "";
-    document.getElementById("precioLocal").value = "";
-    document.getElementById("linkProdExterior").value = "";
-    document.getElementById("precioExterior").value = "";
+    const nombreProducto = document.getElementById("nombreProducto");
+    const linkProdLocal = document.getElementById("linkProdLocal");
+    const precioLocal = document.getElementById("precioLocal");
+    const spanPrecioLocal = document.getElementById("spanPrecioLocal");
+    const linkProdExterior = document.getElementById("linkProdExterior");
+    const precioExterior = document.getElementById("precioExterior");
+    const spanPrecioExterior = document.getElementById("spanPrecioExterior");
+
+    nombreProducto.value = "";
+    nombreProducto.classList.remove("form-label");
+    nombreProducto.classList.remove(`${nombreProducto.classList.contains("is-invalid") ? 'is-invalid' : 'is-valid'}`);
+    linkProdLocal.value = "";
+    linkProdLocal.classList.remove("form-label");
+    linkProdLocal.classList.remove(`${linkProdLocal.classList.contains("is-invalid") ? 'is-invalid' : 'is-valid'}`);
+    precioLocal.value = "";
+    precioLocal.classList.remove("form-label");
+    precioLocal.classList.remove(`${precioLocal.classList.contains("is-invalid") ? 'is-invalid' : 'is-valid'}`);
+    spanPrecioLocal.classList.remove("form-label");
+    spanPrecioLocal.classList.remove(`${spanPrecioLocal.classList.contains("is-invalid") ? 'is-invalid' : 'is-valid'}`);
+    linkProdExterior.value = "";
+    linkProdExterior.classList.remove("form-label");
+    linkProdExterior.classList.remove(`${linkProdExterior.classList.contains("is-invalid") ? 'is-invalid' : 'is-valid'}`);
+    precioExterior.value = "";
+    precioExterior.classList.remove("form-label");
+    precioExterior.classList.remove(`${precioExterior.classList.contains("is-invalid") ? 'is-invalid' : 'is-valid'}`);
+    spanPrecioExterior.classList.remove("form-label");
+    spanPrecioExterior.classList.remove(`${spanPrecioExterior.classList.contains("is-invalid") ? 'is-invalid' : 'is-valid'}`);
 }
 
+//      FUNCION PARA BORRAR COMPLETAMENTE TODO
 const borrarTodo = () => {
     listaProductos = [];
     localStorage.clear();
@@ -127,17 +202,42 @@ const borrarTodo = () => {
 //	    FUNCION PARA AGREGAR CADA PRODUCTO
 function agregarProducto() {
     const nombreProducto = document.getElementById("nombreProducto").value;
+    const checkNombre = checkValores(nombreProducto, "nombre");
     const linkProdLocal = document.getElementById("linkProdLocal").value;
+    const checkLinkLoc = checkValores(linkProdLocal, "link", "Local");
     const precioLocal = document.getElementById("precioLocal").value;
+    const checkPrecioLoc = checkValores(precioLocal, "precio", "Local");
     const linkProdExterior = document.getElementById("linkProdExterior").value;
+    const checkLinkExt = checkValores(linkProdExterior, "link", "Exterior");
     const precioExterior = document.getElementById("precioExterior").value;
+    const checkPrecioExt = checkValores(precioExterior, "precio", "Exterior");
 
-    listaProductos.push(new Producto(nombreProducto, precioLocal, linkProdLocal, precioExterior, linkProdExterior));
-    localStorage.clear();
-    localStorage.setItem("listaProductos", JSON.stringify(listaProductos));
-    actualizarLista();
+    if (checkNombre && checkLinkLoc && checkPrecioLoc && checkLinkExt && checkPrecioExt) {
 
-    limpiarForm();
+        listaProductos.push(new Producto(nombreProducto, precioLocal, linkProdLocal, precioExterior, linkProdExterior));
+
+        localStorage.clear();
+        localStorage.setItem("listaProductos", JSON.stringify(listaProductos));
+        actualizarLista();
+        
+        Toastify({
+            text: `Producto agregado!`,
+            duration: 3000,
+            style: {
+                background: "linear-gradient(90deg, rgba(0,63,8,1) 0%, rgba(17,153,11,1) 25%, rgba(17,153,11,1) 50%, rgba(17,153,11,1) 75%, rgba(0,63,8,1) 100%)",
+            }
+        }).showToast();
+
+        limpiarForm();
+
+    } else {
+        swal.fire({
+            title: `Error!`,
+            text: `Hay uno o más errores en los datos anteriores. El producto no se agregó a la lista.`,
+            icon: 'error',
+            timer: 5000,
+        });
+    }
 }
 
 //      FUNCION ELIMINA PRODUCTO DE LA LISTA
@@ -150,16 +250,21 @@ function eliminarDeLaLista(producto) {
 }
 
 //		CONFIGURACION DE ELEMENTOS DEL FORMULARIO
-function configFormulario() {
+document.addEventListener("DOMContentLoaded", () => {
+
+    // CHEQUEA ALMACENAMIENTO EN LOCAL STORAGE
+    //listaProductos = JSON.parse(localStorage.getItem("listaProductos"));
+    actualizarLista();
+
     // CONFIG PREVENT DEFAULT DEL FORM
     const formulario = document.getElementById("formularioProducto");
     formulario.addEventListener("submit", (e) => {
         e.preventDefault();
-    })
+    });
     const formularioEnvios = document.getElementById("formularioEnvios");
     formularioEnvios.addEventListener("submit", (e) => {
         e.preventDefault();
-    })
+    });
 
     // CONFIG BOTON "AGREGAR"
     const botonAgregar = document.getElementById("btnAgregar");
@@ -179,6 +284,4 @@ function configFormulario() {
     botonLimpiar.addEventListener("click", () => {
         borrarTodo();
     });
-}
-
-configFormulario();
+});
