@@ -1,23 +1,3 @@
-//      VARIABLES GLOBALES
-const dolarOficial = 249.13;
-const impuestoPais = 1.30;
-const percepGanancias = 1.45;
-const percepBienes = 1.25;
-
-//		CONSTRUCTOR DE CADA PRODUCTO
-class Producto {
-    constructor(nombre, precioLoc, linkLoc, precioExt, linkExt) {
-        this.nombre = nombre.toUpperCase();
-        this.precioLoc = precioLoc;
-        this.linkLoc = linkLoc;
-        this.precioExt = precioExt;
-        this.linkExt = linkExt;
-    }
-}
-
-//		ARRAY DE PRODUCTOS
-const listaProductos = [];
-
 //		ACTUALIZA LISTA DE PRODUCTOS
 const actualizarLista = () => {
     const listaHTML = document.getElementById("lista");
@@ -59,7 +39,7 @@ const actualizarLista = () => {
     });
 }
 
-//      FUNCION DECISION FINAL SEGUN EL CALCULO
+//      FUNCION MENSAJE DECISION FINAL SEGUN EL CALCULO
 const decisionFinal = (mercado, precioFinal) => {
     if (mercado == "local") {
         swal.fire({
@@ -136,10 +116,25 @@ function checkValores(valor, tipo, region) {
             spanPrecioProd.classList.add("is-invalid");
             return false;
         }
+
+    } else if (tipo == "envio"){
+        const envio = document.getElementById(`precioEnvio${region}`);
+        envio.classList.add("form-label");
+        const spanEnvio = document.getElementById(`spanPrecioEnvio${region}`);
+        spanEnvio.classList.add("form-label");
+        if (!isNaN(valor) && valor >= 0) {
+            envio.classList.add("is-valid");
+            spanEnvio.classList.add("is-valid");
+            return true;
+        } else {
+            envio.classList.add("is-invalid");
+            spanEnvio.classList.add("is-invalid");
+            return false;
+        }
     }
 }
 
-//		COMPARADOR DE PRECIOS Y ELECCION FINAL
+//		FUNCION CALCULO COMPARADOR DE PRECIOS
 function comparadorPrecios(decisionFinal) {
     let precioFinalLoc = listaProductos.reduce((total, e) => total + parseInt(e.precioLoc), 0);
     precioFinalLoc += parseInt(document.getElementById("precioEnvioLoc").value);
@@ -159,6 +154,39 @@ function comparadorPrecios(decisionFinal) {
     } else {
         decisionFinal("igual", precioFinalLoc);
     }
+    limpiarEnvio();
+}
+
+//      FUNCION CHEQUEAR SI DEBE CALCULAR
+function checkCalcular(){
+    const envioLocal = document.getElementById("precioEnvioLoc");
+    const envioExterior = document.getElementById("precioEnvioExt");
+    const checkLoc = checkValores(envioLocal.value,"envio","Loc");
+    const checkExt = checkValores(envioExterior.value,"envio","Ext");
+    if(checkLoc && checkExt ){
+        return true;
+    } else{
+        swal.fire({
+            title: `Error!`,
+            text: `Hay uno o más errores en los datos anteriores. No se pudo calcular.`,
+            icon: 'error',
+            timer: 5000,
+        });
+        return false;
+    }
+}
+
+//      FUNCION GLOBAL PARA LIMPIAR INPUTS
+const limpiarGlobal = (nodo) => {
+    if (nodo.classList.contains("form-label")) {
+        nodo.classList.remove("form-label");
+    }
+    if (nodo.classList.contains("is-invalid")) {
+        nodo.classList.remove("is-invalid");
+    }
+    if (nodo.classList.contains("is-valid")) {
+        nodo.classList.remove("is-valid");
+    }
 }
 
 //      FUNCION PARA LIMPIAR TODO EL FORM LUEGO DE AGREGAR
@@ -172,30 +200,40 @@ const limpiarForm = () => {
     const spanPrecioExterior = document.getElementById("spanPrecioExterior");
 
     nombreProducto.value = "";
-    nombreProducto.classList.remove("form-label");
-    nombreProducto.classList.remove(`${nombreProducto.classList.contains("is-invalid") ? 'is-invalid' : 'is-valid'}`);
+    limpiarGlobal(nombreProducto);
     linkProdLocal.value = "";
-    linkProdLocal.classList.remove("form-label");
-    linkProdLocal.classList.remove(`${linkProdLocal.classList.contains("is-invalid") ? 'is-invalid' : 'is-valid'}`);
+    limpiarGlobal(linkProdLocal);
     precioLocal.value = "";
-    precioLocal.classList.remove("form-label");
-    precioLocal.classList.remove(`${precioLocal.classList.contains("is-invalid") ? 'is-invalid' : 'is-valid'}`);
-    spanPrecioLocal.classList.remove("form-label");
-    spanPrecioLocal.classList.remove(`${spanPrecioLocal.classList.contains("is-invalid") ? 'is-invalid' : 'is-valid'}`);
+    limpiarGlobal(precioLocal);
+    limpiarGlobal(spanPrecioLocal);
     linkProdExterior.value = "";
-    linkProdExterior.classList.remove("form-label");
-    linkProdExterior.classList.remove(`${linkProdExterior.classList.contains("is-invalid") ? 'is-invalid' : 'is-valid'}`);
+    limpiarGlobal(linkProdExterior);
     precioExterior.value = "";
-    precioExterior.classList.remove("form-label");
-    precioExterior.classList.remove(`${precioExterior.classList.contains("is-invalid") ? 'is-invalid' : 'is-valid'}`);
-    spanPrecioExterior.classList.remove("form-label");
-    spanPrecioExterior.classList.remove(`${spanPrecioExterior.classList.contains("is-invalid") ? 'is-invalid' : 'is-valid'}`);
+    limpiarGlobal(precioExterior);
+    limpiarGlobal(spanPrecioExterior);
+}
+
+//      FUNCION LIMPIAR CONTENIDO INPUTS ENVIOS
+const limpiarEnvio = () => {
+    const envioLocal = document.getElementById("precioEnvioLoc");
+    const spanEnvioLocal = document.getElementById("spanPrecioEnvioLoc");
+    const envioExterior = document.getElementById("precioEnvioExt");
+    const spanEnvioExterior = document.getElementById("spanPrecioEnvioExt");
+
+    envioLocal.value = "";
+    limpiarGlobal(envioLocal);
+    limpiarGlobal(spanEnvioLocal);
+    envioExterior.value = "";
+    limpiarGlobal(envioExterior);
+    limpiarGlobal(spanEnvioExterior);
 }
 
 //      FUNCION PARA BORRAR COMPLETAMENTE TODO
 const borrarTodo = () => {
-    listaProductos = [];
-    localStorage.clear();
+    while (listaProductos.length > 0) {
+        listaProductos.pop();
+    }
+    localStorage.removeItem("listaProductos");
     actualizarLista();
 }
 
@@ -216,10 +254,10 @@ function agregarProducto() {
 
         listaProductos.push(new Producto(nombreProducto, precioLocal, linkProdLocal, precioExterior, linkProdExterior));
 
-        localStorage.clear();
+        localStorage.removeItem("listaProductos");
         localStorage.setItem("listaProductos", JSON.stringify(listaProductos));
         actualizarLista();
-        
+
         Toastify({
             text: `Producto agregado!`,
             duration: 3000,
@@ -244,17 +282,25 @@ function agregarProducto() {
 function eliminarDeLaLista(producto) {
     const index = listaProductos.indexOf(producto);
     listaProductos.splice(index, 1);
-    localStorage.clear();
+    localStorage.removeItem("listaProductos");
     localStorage.setItem("listaProductos", JSON.stringify(listaProductos));
     actualizarLista();
 }
 
-//		CONFIGURACION DE ELEMENTOS DEL FORMULARIO
+//      FUNCION CHEQUEA ALMACENAMIENTO EN LOCAL STORAGE
+const checkLS = () => {
+    const LS = JSON.parse(localStorage.getItem("listaProductos"));
+    for (let i = 0; i < LS.length; i++) {
+        listaProductos.push(LS[i]);
+    }
+    actualizarLista();
+}
+
+//	    CONFIGURACION DE ELEMENTOS DEL FORMULARIO
 document.addEventListener("DOMContentLoaded", () => {
 
     // CHEQUEA ALMACENAMIENTO EN LOCAL STORAGE
-    //listaProductos = JSON.parse(localStorage.getItem("listaProductos"));
-    actualizarLista();
+    checkLS();
 
     // CONFIG PREVENT DEFAULT DEL FORM
     const formulario = document.getElementById("formularioProducto");
@@ -275,13 +321,16 @@ document.addEventListener("DOMContentLoaded", () => {
     // CONFIG BOTON "CALCULAR"
     const botonCalcular = document.getElementById("btnCalcular");
     botonCalcular.addEventListener("click", () => {
-        // --- FALTA AGREGAR CHEQUEADOR POR CADA INPUT DE ENVIOS
-        comparadorPrecios(decisionFinal);
+        if(checkCalcular()){
+            comparadorPrecios(decisionFinal);
+        }
     });
 
     // CONFIG BOTON "LIMPIAR"
     const botonLimpiar = document.getElementById("btnLimpiar");
     botonLimpiar.addEventListener("click", () => {
         borrarTodo();
+        limpiarForm();
+        limpiarEnvio();
     });
 });
