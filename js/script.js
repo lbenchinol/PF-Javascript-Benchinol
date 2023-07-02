@@ -259,11 +259,13 @@ function eliminarDeLaLista(producto) {
 
 //      FUNCION CHEQUEA ALMACENAMIENTO EN LOCAL STORAGE
 const checkLS = () => {
-    const LS = JSON.parse(localStorage.getItem("listaProductos"));
-    for (let i = 0; i < LS.length; i++) {
-        listaProductos.push(LS[i]);
+    if (localStorage.length > 0) {
+        const LS = JSON.parse(localStorage.getItem("listaProductos"));
+        for (let i = 0; i < LS.length; i++) {
+            listaProductos.push(LS[i]);
+        }
+        actualizarLista();
     }
-    actualizarLista();
 }
 
 //      OBTIENE INFO DOLAR DE API DOLARSI
@@ -273,7 +275,7 @@ function actualizarValorDolar() {
         .then((respObj) => respObj[0])
         .then((obj) => obj.casa)
         .then((data) => {
-            const dataOk = data.venta.replace(",",".")
+            const dataOk = data.venta.replace(",", ".")
 
             dolarOficial = Number(dataOk);
 
