@@ -8,24 +8,26 @@ const actualizarLista = () => {
         contenedor.classList.add("mb-1");
 
         const nombre = document.createElement("p");
-        nombre.classList.add("col");
+        nombre.classList.add("col-5");
         nombre.classList.add("m-0");
         nombre.innerText = producto.nombre;
 
         const precioARS = document.createElement("p");
-        precioARS.classList.add("col");
+        precioARS.classList.add("col-3");
         precioARS.classList.add("m-0");
         precioARS.classList.add("border-start");
         precioARS.classList.add("border-end");
         precioARS.innerText = producto.precioLoc;
 
         const precioUSD = document.createElement("p");
-        precioUSD.classList.add("col");
+        precioUSD.classList.add("col-3");
         precioUSD.classList.add("m-0");
         precioUSD.innerText = producto.precioExt;
 
-        const boton = document.createElement("button");
-        boton.textContent = "Eliminar";
+        const boton = document.createElement("i");
+        boton.classList.add("col-1");
+        boton.classList.add("bi");
+        boton.classList.add("bi-x-circle");
         boton.addEventListener("click", () => {
             eliminarDeLaLista(producto);
         });
