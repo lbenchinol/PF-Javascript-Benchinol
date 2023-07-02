@@ -67,16 +67,6 @@ const decisionFinal = (mercado, precioFinal) => {
     }
 }
 
-//      FUNCION CHEQUEADOR URL
-function validarURL(link) {
-    try {
-        const newUrl = new URL(link);
-        return newUrl.protocol === 'http:' || newUrl.protocol === 'https:';
-    } catch (err) {
-        return false;
-    }
-}
-
 //      FUNCION CHEQUEADOR DE VALORES
 function checkValores(valor, tipo, region) {
     if (tipo == "nombre") {
@@ -88,18 +78,6 @@ function checkValores(valor, tipo, region) {
             return true;
         } else {
             nombreProducto.classList.add("is-invalid");
-            return false;
-        }
-
-    } else if (tipo == "link") {
-        const linkProd = document.getElementById(`linkProd${region}`);
-        linkProd.classList.add("form-label");
-
-        if (isNaN(valor) && validarURL(valor)) {
-            linkProd.classList.add("is-valid");
-            return true;
-        } else {
-            linkProd.classList.add("is-invalid");
             return false;
         }
 
@@ -194,22 +172,16 @@ const limpiarGlobal = (nodo) => {
 //      FUNCION PARA LIMPIAR TODO EL FORM LUEGO DE AGREGAR
 const limpiarForm = () => {
     const nombreProducto = document.getElementById("nombreProducto");
-    const linkProdLocal = document.getElementById("linkProdLocal");
     const precioLocal = document.getElementById("precioLocal");
     const spanPrecioLocal = document.getElementById("spanPrecioLocal");
-    const linkProdExterior = document.getElementById("linkProdExterior");
     const precioExterior = document.getElementById("precioExterior");
     const spanPrecioExterior = document.getElementById("spanPrecioExterior");
 
     nombreProducto.value = "";
     limpiarGlobal(nombreProducto);
-    linkProdLocal.value = "";
-    limpiarGlobal(linkProdLocal);
     precioLocal.value = "";
     limpiarGlobal(precioLocal);
     limpiarGlobal(spanPrecioLocal);
-    linkProdExterior.value = "";
-    limpiarGlobal(linkProdExterior);
     precioExterior.value = "";
     limpiarGlobal(precioExterior);
     limpiarGlobal(spanPrecioExterior);
@@ -243,18 +215,14 @@ const borrarTodo = () => {
 function agregarProducto() {
     const nombreProducto = document.getElementById("nombreProducto").value;
     const checkNombre = checkValores(nombreProducto, "nombre");
-    const linkProdLocal = document.getElementById("linkProdLocal").value;
-    const checkLinkLoc = checkValores(linkProdLocal, "link", "Local");
     const precioLocal = document.getElementById("precioLocal").value;
     const checkPrecioLoc = checkValores(precioLocal, "precio", "Local");
-    const linkProdExterior = document.getElementById("linkProdExterior").value;
-    const checkLinkExt = checkValores(linkProdExterior, "link", "Exterior");
     const precioExterior = document.getElementById("precioExterior").value;
     const checkPrecioExt = checkValores(precioExterior, "precio", "Exterior");
 
-    if (checkNombre && checkLinkLoc && checkPrecioLoc && checkLinkExt && checkPrecioExt) {
+    if (checkNombre && checkPrecioLoc && checkPrecioExt) {
 
-        listaProductos.push(new Producto(nombreProducto, precioLocal, linkProdLocal, precioExterior, linkProdExterior));
+        listaProductos.push(new Producto(nombreProducto, precioLocal, precioExterior));
 
         localStorage.removeItem("listaProductos");
         localStorage.setItem("listaProductos", JSON.stringify(listaProductos));

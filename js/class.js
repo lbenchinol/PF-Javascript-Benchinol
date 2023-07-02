@@ -6,12 +6,10 @@ const percepBienes = 1.25;
 
 //		CONSTRUCTOR DE CADA PRODUCTO
 class Producto {
-    constructor(nombre, precioLoc, linkLoc, precioExt, linkExt) {
+    constructor(nombre, precioLoc, precioExt) {
         this.nombre = nombre.toUpperCase();
         this.precioLoc = precioLoc;
-        this.linkLoc = linkLoc;
         this.precioExt = precioExt;
-        this.linkExt = linkExt;
     }
 }
 
