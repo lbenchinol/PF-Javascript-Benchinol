@@ -8,24 +8,26 @@ const actualizarLista = () => {
         contenedor.classList.add("mb-1");
 
         const nombre = document.createElement("p");
-        nombre.classList.add("col");
+        nombre.classList.add("col-5");
         nombre.classList.add("m-0");
         nombre.innerText = producto.nombre;
 
         const precioARS = document.createElement("p");
-        precioARS.classList.add("col");
+        precioARS.classList.add("col-3");
         precioARS.classList.add("m-0");
         precioARS.classList.add("border-start");
         precioARS.classList.add("border-end");
         precioARS.innerText = producto.precioLoc;
 
         const precioUSD = document.createElement("p");
-        precioUSD.classList.add("col");
+        precioUSD.classList.add("col-3");
         precioUSD.classList.add("m-0");
         precioUSD.innerText = producto.precioExt;
 
-        const boton = document.createElement("button");
-        boton.textContent = "Eliminar";
+        const boton = document.createElement("i");
+        boton.classList.add("col-1");
+        boton.classList.add("bi");
+        boton.classList.add("bi-x-circle");
         boton.addEventListener("click", () => {
             eliminarDeLaLista(producto);
         });
@@ -65,16 +67,6 @@ const decisionFinal = (mercado, precioFinal) => {
     }
 }
 
-//      FUNCION CHEQUEADOR URL
-function validarURL(link) {
-    try {
-        const newUrl = new URL(link);
-        return newUrl.protocol === 'http:' || newUrl.protocol === 'https:';
-    } catch (err) {
-        return false;
-    }
-}
-
 //      FUNCION CHEQUEADOR DE VALORES
 function checkValores(valor, tipo, region) {
     if (tipo == "nombre") {
@@ -86,18 +78,6 @@ function checkValores(valor, tipo, region) {
             return true;
         } else {
             nombreProducto.classList.add("is-invalid");
-            return false;
-        }
-
-    } else if (tipo == "link") {
-        const linkProd = document.getElementById(`linkProd${region}`);
-        linkProd.classList.add("form-label");
-
-        if (isNaN(valor) && validarURL(valor)) {
-            linkProd.classList.add("is-valid");
-            return true;
-        } else {
-            linkProd.classList.add("is-invalid");
             return false;
         }
 
@@ -117,7 +97,7 @@ function checkValores(valor, tipo, region) {
             return false;
         }
 
-    } else if (tipo == "envio"){
+    } else if (tipo == "envio") {
         const envio = document.getElementById(`precioEnvio${region}`);
         envio.classList.add("form-label");
         const spanEnvio = document.getElementById(`spanPrecioEnvio${region}`);
@@ -158,14 +138,14 @@ function comparadorPrecios(decisionFinal) {
 }
 
 //      FUNCION CHEQUEAR SI DEBE CALCULAR
-function checkCalcular(){
+function checkCalcular() {
     const envioLocal = document.getElementById("precioEnvioLoc");
     const envioExterior = document.getElementById("precioEnvioExt");
-    const checkLoc = checkValores(envioLocal.value,"envio","Loc");
-    const checkExt = checkValores(envioExterior.value,"envio","Ext");
-    if(checkLoc && checkExt ){
+    const checkLoc = checkValores(envioLocal.value, "envio", "Loc");
+    const checkExt = checkValores(envioExterior.value, "envio", "Ext");
+    if (checkLoc && checkExt) {
         return true;
-    } else{
+    } else {
         swal.fire({
             title: `Error!`,
             text: `Hay uno o más errores en los datos anteriores. No se pudo calcular.`,
@@ -192,22 +172,16 @@ const limpiarGlobal = (nodo) => {
 //      FUNCION PARA LIMPIAR TODO EL FORM LUEGO DE AGREGAR
 const limpiarForm = () => {
     const nombreProducto = document.getElementById("nombreProducto");
-    const linkProdLocal = document.getElementById("linkProdLocal");
     const precioLocal = document.getElementById("precioLocal");
     const spanPrecioLocal = document.getElementById("spanPrecioLocal");
-    const linkProdExterior = document.getElementById("linkProdExterior");
     const precioExterior = document.getElementById("precioExterior");
     const spanPrecioExterior = document.getElementById("spanPrecioExterior");
 
     nombreProducto.value = "";
     limpiarGlobal(nombreProducto);
-    linkProdLocal.value = "";
-    limpiarGlobal(linkProdLocal);
     precioLocal.value = "";
     limpiarGlobal(precioLocal);
     limpiarGlobal(spanPrecioLocal);
-    linkProdExterior.value = "";
-    limpiarGlobal(linkProdExterior);
     precioExterior.value = "";
     limpiarGlobal(precioExterior);
     limpiarGlobal(spanPrecioExterior);
@@ -241,18 +215,14 @@ const borrarTodo = () => {
 function agregarProducto() {
     const nombreProducto = document.getElementById("nombreProducto").value;
     const checkNombre = checkValores(nombreProducto, "nombre");
-    const linkProdLocal = document.getElementById("linkProdLocal").value;
-    const checkLinkLoc = checkValores(linkProdLocal, "link", "Local");
     const precioLocal = document.getElementById("precioLocal").value;
     const checkPrecioLoc = checkValores(precioLocal, "precio", "Local");
-    const linkProdExterior = document.getElementById("linkProdExterior").value;
-    const checkLinkExt = checkValores(linkProdExterior, "link", "Exterior");
     const precioExterior = document.getElementById("precioExterior").value;
     const checkPrecioExt = checkValores(precioExterior, "precio", "Exterior");
 
-    if (checkNombre && checkLinkLoc && checkPrecioLoc && checkLinkExt && checkPrecioExt) {
+    if (checkNombre && checkPrecioLoc && checkPrecioExt) {
 
-        listaProductos.push(new Producto(nombreProducto, precioLocal, linkProdLocal, precioExterior, linkProdExterior));
+        listaProductos.push(new Producto(nombreProducto, precioLocal, precioExterior));
 
         localStorage.removeItem("listaProductos");
         localStorage.setItem("listaProductos", JSON.stringify(listaProductos));
@@ -296,11 +266,31 @@ const checkLS = () => {
     actualizarLista();
 }
 
+//      OBTIENE INFO DOLAR DE API DOLARSI
+function actualizarValorDolar() {
+    fetch("https://www.dolarsi.com/api/api.php?type=valoresprincipales")
+        .then((resp) => resp.json())
+        .then((respObj) => respObj[0])
+        .then((obj) => obj.casa)
+        .then((data) => {
+            const dataOk = data.venta.replace(",",".")
+
+            dolarOficial = Number(dataOk);
+
+            const valorDolar = document.getElementById("valorDolar");
+            valorDolar.innerText = dolarOficial;
+        });
+}
+
+
 //	    CONFIGURACION DE ELEMENTOS DEL FORMULARIO
 document.addEventListener("DOMContentLoaded", () => {
 
     // CHEQUEA ALMACENAMIENTO EN LOCAL STORAGE
     checkLS();
+
+    //  ACTUALIZA VALOR DOLAR
+    actualizarValorDolar();
 
     // CONFIG PREVENT DEFAULT DEL FORM
     const formulario = document.getElementById("formularioProducto");
@@ -321,7 +311,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // CONFIG BOTON "CALCULAR"
     const botonCalcular = document.getElementById("btnCalcular");
     botonCalcular.addEventListener("click", () => {
-        if(checkCalcular()){
+        if (checkCalcular()) {
             comparadorPrecios(decisionFinal);
         }
     });

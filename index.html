@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es" data-bs-theme="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,62 +19,53 @@
     <!-- Link a mis estilos -->
     <link rel="stylesheet" href="./style/styles.css">
 
-    <title>Benchinol Lucas - Pre entrega 3</title>
-    
+    <title>Benchinol Lucas - Entrega final</title>
 </head>
+
 <body>
-	<header class="container text-center">
-		<div class="row my-3">
-                <div class="col">
-                    <h1 class="fw-bold">Comparador de precios Locales y del Exterior</h1>
-                </div>
+    <header class="container text-center">
+        <div class="row my-3">
+            <div class="col">
+                <h1 class="fw-bold">Comparador de precios Locales y del Exterior</h1>
             </div>
-	</header>
+        </div>
+    </header>
     <main>
         <div class="container text-center">
             <div class="row">
-				<div class="col">
-					<h2 class="m-0">Agregue un nuevo producto</h2>
-				</div>
-			</div>
+                <div class="col">
+                    <h2 class="m-0">Agregue un nuevo producto</h2>
+                </div>
+            </div>
             <div class="row border border-2 rounded p-3 mb-3">
                 <div class="col">
-                    <form class="text-start" id="formularioProducto">
+                    <form class="text-center" id="formularioProducto">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="nombreProducto"
                                 placeholder="Nombre del producto" required>
                             <label for="nombreProducto" class="form-label my-0">Nombre del producto</label>
                         </div>
-                        <div class="mb-3">
-                            <p class="text-center text-decoration-underline fw-bold my-0">Información del mercado local
-                            </p>
-                            <div class="form-floating">
-                                <input type="url" class="form-control mb-2" id="linkProdLocal"
-                                    placeholder="URL del producto en el mercado local">
-                                <label for="linkProdLocal" class="form-label my-0">URL del producto en el mercado
-                                    local</label>
-                            </div>
-                            <div class="input-group">
-                                <span class="input-group-text" id="spanPrecioLocal">$</span>
-                                <input type="number" class="form-control" id="precioLocal" placeholder="Precio en ARS">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <p class="text-center text-decoration-underline fw-bold my-0">Información del mercado
-                                exterior</p>
-                            <div class="form-floating">
-                                <input type="url" class="form-control mb-2" id="linkProdExterior"
-                                    placeholder="URL del producto en el mercado exterior">
-                                <label for="linkProdExterior" class="form-label my-0">URL del producto en el mercado
-                                    exterior</label>
-                            </div>
-                            <div class="input-group">
-                                <span class="input-group-text" id="spanPrecioExterior">$</span>
-                                <input type="number" class="form-control" id="precioExterior"
-                                    placeholder="Precio en USD">
-                            </div>
+                        <div class="container">
+                            <div class="row mb-3">
+                                <div class="col-4">
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="spanPrecioLocal">$</span>
+                                        <input type="number" class="form-control" id="precioLocal"
+                                            placeholder="Precio en ARS">
+                                    </div>
+                                </div>
+                                <div class="col-4"></div>
+                                <div class="col-4">
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="spanPrecioExterior">$</span>
+                                        <input type="number" class="form-control" id="precioExterior"
+                                            placeholder="Precio en USD">
+                                    </div>
+                                </div>
 
+                            </div>
                         </div>
+
                         <button type="submit" class="btn btn-primary" id="btnAgregar"><i class="bi bi-plus-circle"></i>
                             Agregar</button>
                     </form>
@@ -83,37 +75,52 @@
                 <h2 class="m-0">Productos</h2>
                 <div class="col border border-2 rounded cardsProductos p-3">
                     <div class="row border-bottom border-2 mb-3">
-                        <p class="col fw-bold">Producto</p>
-                        <p class="col border-start border-end fw-bold">$ ARS</p>
-                        <p class="col fw-bold">$ USD</p>
+                        <p class="col-5 fw-bold">Producto</p>
+                        <p class="col-3 border-start border-end fw-bold">$ ARS</p>
+                        <p class="col-3 fw-bold">$ USD</p>
+                        <div class="col-1"></div>
                     </div>
                     <div id="lista"></div>
                 </div>
             </div>
             <div class="row text-start border border-2 rounded p-3">
-                <div class="col">
-                    <form id="formularioEnvios">
-                        <div class="input-group">
-                            <span class="input-group-text mb-2" id="spanPrecioEnvioLoc">$</span>
-                            <input type="number" class="form-control mb-2" id="precioEnvioLoc"
-                                placeholder="Precio del envío local en ARS">
+                <div class="col container text-center">
+                    <form class="row" id="formularioEnvios">
+                        <div class="col-4">
+                            <div class="input-group">
+                                <span class="input-group-text mb-2" id="spanPrecioEnvioLoc">$</span>
+                                <input type="number" class="form-control mb-2" id="precioEnvioLoc"
+                                    placeholder="Precio del envío local en ARS">
+                            </div>
                         </div>
-                        <div class="input-group">
-                            <span class="input-group-text mb-2" id="spanPrecioEnvioExt">$</span>
-                            <input type="number" class="form-control mb-2" id="precioEnvioExt"
-                                placeholder="Precio del envío exterior en USD">
+                        <div class="col-4"></div>
+                        <div class="col-4">
+                            <div class="input-group">
+                                <span class="input-group-text mb-2" id="spanPrecioEnvioExt">$</span>
+                                <input type="number" class="form-control mb-2" id="precioEnvioExt"
+                                    placeholder="Precio del envío exterior en USD">
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-primary my-2 me-3" id="btnCalcular"><i
-                                class="bi bi-calculator"></i>
-                            Calcular!</button>
-                        <button type="submit" class="btn btn-outline-light my-2" id="btnLimpiar"><i
-                                class="bi bi-arrow-clockwise"></i>
-                            Limpiar todo</button>
+
                     </form>
+                    <button type="submit" class="btn btn-primary my-2 me-3" id="btnCalcular"><i
+                            class="bi bi-calculator"></i>
+                        Calcular!</button>
+                    <button type="submit" class="btn btn-outline-light my-2" id="btnLimpiar"><i
+                            class="bi bi-arrow-clockwise"></i>
+                        Limpiar todo</button>
                 </div>
             </div>
         </div>
     </main>
+    <section class="container mt-3">
+        <div class="row border border-2 border-success rounded p-2 border-opacity-75 ">
+            <div class="col">
+                <p class="d-inline-flex my-1">Valor Dólar Oficial: $</p>
+                <p class="d-inline-flex my-1" id="valorDolar"></p>
+            </div>
+        </div>
+    </section>
     <!-- Sweet Alert 2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Toastify -->
@@ -122,4 +129,5 @@
     <script src="./js/class.js"></script>
     <script src="./js/script.js"></script>
 </body>
+
 </html>
