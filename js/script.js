@@ -117,7 +117,7 @@ function checkValores(valor, tipo, region) {
             return false;
         }
 
-    } else if (tipo == "envio"){
+    } else if (tipo == "envio") {
         const envio = document.getElementById(`precioEnvio${region}`);
         envio.classList.add("form-label");
         const spanEnvio = document.getElementById(`spanPrecioEnvio${region}`);
@@ -158,14 +158,14 @@ function comparadorPrecios(decisionFinal) {
 }
 
 //      FUNCION CHEQUEAR SI DEBE CALCULAR
-function checkCalcular(){
+function checkCalcular() {
     const envioLocal = document.getElementById("precioEnvioLoc");
     const envioExterior = document.getElementById("precioEnvioExt");
-    const checkLoc = checkValores(envioLocal.value,"envio","Loc");
-    const checkExt = checkValores(envioExterior.value,"envio","Ext");
-    if(checkLoc && checkExt ){
+    const checkLoc = checkValores(envioLocal.value, "envio", "Loc");
+    const checkExt = checkValores(envioExterior.value, "envio", "Ext");
+    if (checkLoc && checkExt) {
         return true;
-    } else{
+    } else {
         swal.fire({
             title: `Error!`,
             text: `Hay uno o más errores en los datos anteriores. No se pudo calcular.`,
@@ -296,11 +296,31 @@ const checkLS = () => {
     actualizarLista();
 }
 
+//      OBTIENE INFO DOLAR DE API DOLARSI
+function actualizarValorDolar() {
+    fetch("https://www.dolarsi.com/api/api.php?type=valoresprincipales")
+        .then((resp) => resp.json())
+        .then((respObj) => respObj[0])
+        .then((obj) => obj.casa)
+        .then((data) => {
+            const dataOk = data.venta.replace(",",".")
+
+            dolarOficial = Number(dataOk);
+
+            const valorDolar = document.getElementById("valorDolar");
+            valorDolar.innerText = dolarOficial;
+        });
+}
+
+
 //	    CONFIGURACION DE ELEMENTOS DEL FORMULARIO
 document.addEventListener("DOMContentLoaded", () => {
 
     // CHEQUEA ALMACENAMIENTO EN LOCAL STORAGE
     checkLS();
+
+    //  ACTUALIZA VALOR DOLAR
+    actualizarValorDolar();
 
     // CONFIG PREVENT DEFAULT DEL FORM
     const formulario = document.getElementById("formularioProducto");
@@ -321,7 +341,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // CONFIG BOTON "CALCULAR"
     const botonCalcular = document.getElementById("btnCalcular");
     botonCalcular.addEventListener("click", () => {
-        if(checkCalcular()){
+        if (checkCalcular()) {
             comparadorPrecios(decisionFinal);
         }
     });

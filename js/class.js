@@ -1,5 +1,5 @@
 //      VARIABLES GLOBALES
-const dolarOficial = 249.13;
+let dolarOficial;
 const impuestoPais = 1.30;
 const percepGanancias = 1.45;
 const percepBienes = 1.25;
